@@ -7,41 +7,37 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Product } from './product.model';
+import { Product } from './products.model';
+import { ProductsService } from './products.service';
 
 @Controller('products')
 export class ProductsController {
-  products: Product[] = [
-    new Product('LIV01', 'Algoritmos Para Viver', 39.9),
-    new Product('LIV02', 'Código Limpo', 89.9),
-    new Product('LIV03', 'Refatoração', 90.5),
-  ];
-
+  constructor(private productsService: ProductsService) {}
   @Get()
   getAllt(): Product[] {
-    return this.products;
+    return this.productsService.getAll();
   }
 
   @Get(':id')
   getOne(@Param('id') id: number): Product {
-    return this.products[0];
+    return this.productsService.getOne(id);
   }
 
   @Post()
   create(@Body() product: Product): string {
-    this.products.push(product);
+    this.productsService.create(product);
     return 'Product create';
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() product: object): string {
-    console.log(product);
+  update(@Param('id') id: number, @Body() product: Product): string {
+    this.productsService.update(id, product);
     return `Product ${id} updated`;
   }
 
   @Delete(':id')
   delete(@Param('id') id: number): string {
-    this.products.pop()
+    this.productsService.delete(id);
     return `Product ${id} deleted`;
   }
 }
