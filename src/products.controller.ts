@@ -7,22 +7,29 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { Product } from './product.model';
 
 @Controller('products')
 export class ProductsController {
+  products: Product[] = [
+    new Product('LIV01', 'Algoritmos Para Viver', 39.9),
+    new Product('LIV02', 'Código Limpo', 89.9),
+    new Product('LIV03', 'Refatoração', 90.5),
+  ];
+
   @Get()
-  getAllt(): string {
-    return 'List all products';
+  getAllt(): Product[] {
+    return this.products;
   }
 
   @Get(':id')
-  getOne(@Param('id') id: number): string {
-    return `return datas of products ${id}`;
+  getOne(@Param('id') id: number): Product {
+    return this.products[0];
   }
 
   @Post()
-  create(@Body() product: object): string {
-    console.log(product);
+  create(@Body() product: Product): string {
+    this.products.push(product);
     return 'Product create';
   }
 
@@ -34,7 +41,7 @@ export class ProductsController {
 
   @Delete(':id')
   delete(@Param('id') id: number): string {
-    return `Product ${id} deleted`;]
-    // test
+    this.products.pop()
+    return `Product ${id} deleted`;
   }
 }
